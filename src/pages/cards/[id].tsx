@@ -1,58 +1,83 @@
-// pages/card/[id].tsx
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { toggleCard } from "@/store/slices/savedCardsSlice";
-import { Container, Typography, Button } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Button,
+} from "@mui/material";
 import axios from "axios";
 
 const CardDetail: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const [card, setCard] = useState<any>(null);
-  const dispatch = useDispatch();
-  const savedCards = useSelector(
-    (state: RootState) => state.savedCards.savedCards
-  );
+  const [savedCards, setSavedCards] = useState<any[]>([]);
 
   useEffect(() => {
-    if (id) {
-      axios
-        .get(`https://api.pokemontcg.io/v2/cards/${id}`)
-        .then((response) => setCard(response.data.data));
-    }
+    const fetchCard = async () => {
+      if (!id) return;
+      try {
+        const response = await axios.get(
+          `https://api.pokemontcg.io/v2/cards/${id}`
+        );
+        setCard(response.data.data);
+      } catch (error) {
+        console.error("Error fetching card:", error);
+      }
+    };
+
+    fetchCard();
   }, [id]);
 
-  if (!card) return <div>Loading...</div>;
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("savedCards") || "[]");
+    setSavedCards(saved);
+  }, []);
 
-  const isSaved = savedCards.includes(card.id);
+  const saveCard = () => {
+    const updatedSavedCards = [...savedCards, card];
+    setSavedCards(updatedSavedCards);
+    localStorage.setItem("savedCards", JSON.stringify(updatedSavedCards));
+  };
+
+  const removeCard = () => {
+    const updatedSavedCards = savedCards.filter(
+      (savedCard) => savedCard.id !== card.id
+    );
+    setSavedCards(updatedSavedCards);
+    localStorage.setItem("savedCards", JSON.stringify(updatedSavedCards));
+  };
+
+  const isCardSaved = () => {
+    return savedCards.some((savedCard) => savedCard.id === card.id);
+  };
+
+  if (!card) return <Typography>Loading...</Typography>;
 
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h4" component="h1" gutterBottom>
-        {card.name}
-      </Typography>
-      <img
-        src={card.images.large}
-        alt={card.name}
-        style={{ width: "100%", marginBottom: 20 }}
-      />
-      <Typography variant="body1">Type: {card.types.join(", ")}</Typography>
-      <Typography variant="body1">HP: {card.hp}</Typography>
-      {card.abilities && (
-        <Typography variant="body1">
-          Abilities:{" "}
-          {card.abilities.map((ability: any) => ability.name).join(", ")}
-        </Typography>
-      )}
+    <Container maxWidth="md">
+      <Card>
+        <CardMedia component="img" image={card.images.large} alt={card.name} />
+        <CardContent>
+          <Typography variant="h4">{card.name}</Typography>
+          <Typography>Type: {card.types.join(", ")}</Typography>
+          <Typography>HP: {card.hp}</Typography>
+          <Typography>
+            Abilities:{" "}
+            {card.abilities.map((ability: any) => ability.name).join(", ")}
+          </Typography>
+        </CardContent>
+      </Card>
       <Button
-        onClick={() => dispatch(toggleCard(card.id))}
         variant="contained"
-        color={isSaved ? "secondary" : "primary"}
-        style={{ marginTop: 20 }}
+        color={isCardSaved() ? "secondary" : "primary"}
+        onClick={() => (isCardSaved() ? removeCard() : saveCard())}
+        sx={{ marginTop: 2 }}
       >
-        {isSaved ? "Remove Card" : "Save Card"}
+        {isCardSaved() ? "Remove Card" : "Save Card"}
       </Button>
     </Container>
   );
