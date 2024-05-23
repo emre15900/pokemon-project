@@ -12,6 +12,7 @@ import {
   CardContent,
   Button,
   Tooltip,
+  CircularProgress,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import axios from "axios";
@@ -19,6 +20,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+
+import { toast } from "react-toastify";
 
 const Home: React.FC = () => {
   const [cards, setCards] = useState<any[]>([]);
@@ -58,6 +61,7 @@ const Home: React.FC = () => {
     const updatedSavedCards = [...savedCards, card];
     setSavedCards(updatedSavedCards);
     localStorage.setItem("savedCards", JSON.stringify(updatedSavedCards));
+    toast.success("Card saved!");
   };
 
   const isCardSaved = (card: any) => {
@@ -70,11 +74,13 @@ const Home: React.FC = () => {
     );
     setSavedCards(updatedSavedCards);
     localStorage.setItem("savedCards", JSON.stringify(updatedSavedCards));
+    toast.error("Card removed!");
   };
 
   const removeAllCards = () => {
     setSavedCards([]);
     localStorage.removeItem("savedCards");
+    toast.error("All cards removed!");
   };
 
   return (
@@ -91,12 +97,14 @@ const Home: React.FC = () => {
                   {savedCards.length > 0 ? (
                     savedCards.map((card) => (
                       <div key={card.id}>
-                        <img
-                          src={card.images.small}
-                          alt={card.name}
-                          width={50}
-                        />
-                        <Typography variant="body2">{card.name}</Typography>
+                        <Link href="/saved">
+                          <img
+                            src={card.images.small}
+                            alt={card.name}
+                            width={50}
+                          />
+                          <Typography variant="body2">{card.name}</Typography>
+                        </Link>
                         <IconButton onClick={() => removeCard(card)}>
                           <CloseIcon />
                         </IconButton>
@@ -106,6 +114,7 @@ const Home: React.FC = () => {
                     <Typography variant="body2">No saved cards</Typography>
                   )}
                 </div>
+
                 {savedCards.length > 0 && (
                   <IconButton color="inherit" onClick={removeAllCards}>
                     <DeleteIcon />
@@ -164,7 +173,7 @@ const Home: React.FC = () => {
             onClick={loadMore}
             disabled={isLoading}
           >
-            {isLoading ? "Loading..." : "Load More"}
+            {isLoading ? <CircularProgress color="primary" /> : "Load More"}
           </Button>
         </div>
       </Container>
