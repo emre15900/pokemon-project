@@ -1,9 +1,11 @@
 import * as React from "react";
 import { AppProps } from "next/app";
+import { Provider } from "react-redux";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "@/theme";
 import "@/styles/globals.css";
+import store from "@/store";
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
@@ -16,10 +18,11 @@ export default function MyApp(props: AppProps) {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-      <CssBaseline />
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </Provider>
   );
 }
