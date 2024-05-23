@@ -1,20 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Typography, Grid, Card, CardMedia, CardContent, Button } from '@mui/material';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Button,
+} from "@mui/material";
+import { useRouter } from "next/router";
 
 const SavedCards: React.FC = () => {
   const [savedCards, setSavedCards] = useState<any[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('savedCards') || '[]');
+    const saved = JSON.parse(localStorage.getItem("savedCards") || "[]");
     setSavedCards(saved);
   }, []);
 
   const removeCard = (card: any) => {
-    const updatedSavedCards = savedCards.filter(savedCard => savedCard.id !== card.id);
+    const updatedSavedCards = savedCards.filter(
+      (savedCard) => savedCard.id !== card.id
+    );
     setSavedCards(updatedSavedCards);
-    localStorage.setItem('savedCards', JSON.stringify(updatedSavedCards));
+    localStorage.setItem("savedCards", JSON.stringify(updatedSavedCards));
   };
 
   return (
@@ -46,7 +56,11 @@ const SavedCards: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <Button variant="contained" color="primary" onClick={() => router.push('/')}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => router.push("/")}
+      >
         Back to Home
       </Button>
     </Container>
