@@ -95,7 +95,14 @@ const Home: React.FC = () => {
     <>
       <AppBar position="static" sx={{ background: "#2D3748" }}>
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <img
+            src="/images/logo.png"
+            width={50}
+            alt="pokemon-logo"
+            style={{ borderRadius: "40px" }}
+          />
+          <Link href={"/"}></Link>
+          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600, ml: 1 }}>
             Pokémon Cards
           </Typography>
           <Tooltip
@@ -111,7 +118,7 @@ const Home: React.FC = () => {
                           alignItems: "center",
                           justifyContent: "space-between",
                           gap: 1,
-                          mb: 2,
+                          mb: 1,
                           background: "#2D3748",
                           padding: "10px",
                           borderRadius: "10px",
@@ -172,7 +179,7 @@ const Home: React.FC = () => {
                       mb: 1.5,
                       mt: 1.5,
                       width: "100%",
-                      textAlign: "center"
+                      textAlign: "center",
                     }}
                   >
                     <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>

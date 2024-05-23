@@ -58,9 +58,28 @@ const CardDetail: React.FC = () => {
   if (!card) return <Typography>Loading...</Typography>;
 
   return (
-    <Container maxWidth="md">
-      <Card>
-        <CardMedia component="img" image={card.images.large} alt={card.name} />
+    <Container maxWidth="lg">
+      <Card
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "10px",
+          padding: "10px",
+          background: "#2D3748",
+          "&:hover": {
+            cursor: "pointer",
+            boxShadow: "0 0 3px #10f110",
+            transition: "all 0.3s",
+            background: "#454f60",
+          },
+        }}
+      >
+        <CardMedia
+          component="img"
+          image={card.images.large}
+          alt={card.name}
+          sx={{ maxWidth: 370 }}
+        />
         <CardContent>
           <Typography variant="h4">{card.name}</Typography>
           <Typography>Type: {card.types.join(", ")}</Typography>
