@@ -13,6 +13,8 @@ import {
   Button,
   Tooltip,
   CircularProgress,
+  Chip,
+  Box,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import axios from "axios";
@@ -35,7 +37,7 @@ const Home: React.FC = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `https://api.pokemontcg.io/v2/cards?page=${page}&pageSize=10`
+          `https://api.pokemontcg.io/v2/cards?page=${page}&pageSize=6`
         );
         setCards((prevCards) => [...prevCards, ...response.data.data]);
       } catch (error) {
@@ -83,44 +85,117 @@ const Home: React.FC = () => {
     toast.error("All cards removed!");
   };
 
+  const truncateText = (text: string, maxLength: number) => {
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + "..."
+      : text;
+  };
+
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ background: "#2D3748" }}>
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Pokémon Cards
           </Typography>
           <Tooltip
             title={
-              <>
-                <div>
+              <Grid>
+                <Grid sx={{ maxHeight: 500, overflow: "scroll" }}>
                   {savedCards.length > 0 ? (
                     savedCards.map((card) => (
-                      <div key={card.id}>
+                      <Grid
+                        key={card.id}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: 1,
+                          mb: 2,
+                          background: "#2D3748",
+                          padding: "10px",
+                          borderRadius: "10px",
+                          "&:hover": {
+                            cursor: "pointer",
+                            transition: "all 0.3s",
+                            background: "#454f60",
+                          },
+                        }}
+                      >
                         <Link href="/saved">
                           <img
                             src={card.images.small}
                             alt={card.name}
-                            width={50}
+                            width={70}
                           />
-                          <Typography variant="body2">{card.name}</Typography>
+                          <Typography
+                            variant="body2"
+                            fontWeight={600}
+                            sx={{ mt: 1 }}
+                          >
+                            {card.name}
+                          </Typography>
                         </Link>
-                        <IconButton onClick={() => removeCard(card)}>
-                          <CloseIcon />
-                        </IconButton>
-                      </div>
+                        <Tooltip title="Remove Card">
+                          <IconButton
+                            onClick={() => removeCard(card)}
+                            sx={{
+                              "&:hover": {
+                                background: "#9a9a9a",
+                              },
+                            }}
+                          >
+                            <CloseIcon
+                              sx={{
+                                color: "#ffffff",
+                              }}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
                     ))
                   ) : (
                     <Typography variant="body2">No saved cards</Typography>
                   )}
-                </div>
+                </Grid>
 
                 {savedCards.length > 0 && (
-                  <IconButton color="inherit" onClick={removeAllCards}>
-                    <DeleteIcon />
-                  </IconButton>
+                  <Button
+                    onClick={removeAllCards}
+                    variant="contained"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      borderRadius: "10px",
+                      textTransform: "none",
+                      mb: 1.5,
+                      mt: 1.5,
+                      width: "100%",
+                      textAlign: "center"
+                    }}
+                  >
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                      Remove All Cards
+                    </Typography>
+                    <Tooltip title="Remove All Card">
+                      <IconButton
+                        sx={{
+                          "&:hover": {
+                            background: "#9a9a9a",
+                          },
+                        }}
+                      >
+                        <DeleteIcon
+                          sx={{
+                            color: "#ffffff",
+                          }}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </Button>
                 )}
-              </>
+              </Grid>
             }
           >
             <IconButton color="inherit" onClick={() => router.push("/saved")}>
@@ -131,19 +206,50 @@ const Home: React.FC = () => {
           </Tooltip>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <Grid container spacing={3} sx={{ marginTop: 2 }}>
           {cards.map((card) => (
-            <Grid item xs={12} sm={6} md={4} key={card.id}>
-              <Link href={`/card/${card.id}`} passHref>
-                <Card>
+            <Grid item xs={12} sm={4} md={3} key={card.id}>
+              <Link href={`/cards/${card.id}`} passHref>
+                <Card
+                  sx={{
+                    borderRadius: "10px",
+                    padding: "10px",
+                    background: "#2D3748",
+                    "&:hover": {
+                      cursor: "pointer",
+                      boxShadow: "0 0 3px #10f110",
+                      transition: "all 0.3s",
+                      background: "#454f60",
+                    },
+                  }}
+                >
                   <CardMedia
                     component="img"
                     image={card.images.small}
                     alt={card.name}
                   />
-                  <CardContent>
-                    <Typography variant="h5">{card.name}</Typography>
+                  <CardContent sx={{ padding: "0 !important", mt: 3, mb: 1 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ color: "#ffffff", fontSize: 18, fontWeight: 600 }}
+                      >
+                        {truncateText(card.name, 16)}
+                      </Typography>
+                      <Chip
+                        label={card.types.join(", ")}
+                        variant="outlined"
+                        sx={{ color: "#10f110", borderColor: "#10f110" }}
+                      />
+                    </Box>
                   </CardContent>
                 </Card>
               </Link>
@@ -153,18 +259,24 @@ const Home: React.FC = () => {
                 onClick={() =>
                   isCardSaved(card) ? removeCard(card) : saveCard(card)
                 }
-                sx={{ marginTop: 1 }}
+                sx={{
+                  marginTop: 1,
+                  width: "100%",
+                  borderRadius: "10px",
+                  fontWeight: 600,
+                }}
               >
                 {isCardSaved(card) ? "Remove Card" : "Save Card"}
               </Button>
             </Grid>
           ))}
         </Grid>
-        <div
-          style={{
+        <Grid
+          sx={{
             display: "flex",
             justifyContent: "center",
             marginTop: "20px",
+            marginBottom: "40px",
           }}
         >
           <Button
@@ -172,10 +284,16 @@ const Home: React.FC = () => {
             color="primary"
             onClick={loadMore}
             disabled={isLoading}
+            sx={{
+              marginTop: 1,
+              borderRadius: "10px",
+              fontWeight: 600,
+              padding: "8px 3rem",
+            }}
           >
             {isLoading ? <CircularProgress color="primary" /> : "Load More"}
           </Button>
-        </div>
+        </Grid>
       </Container>
     </>
   );

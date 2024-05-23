@@ -67,7 +67,7 @@ const CardDetail: React.FC = () => {
           <Typography>HP: {card.hp}</Typography>
           <Typography>
             Abilities:{" "}
-            {card.abilities.map((ability: any) => ability.name).join(", ")}
+            {card?.abilities?.map((ability: any) => ability.name).join(", ")}
           </Typography>
         </CardContent>
       </Card>
