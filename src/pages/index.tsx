@@ -37,7 +37,7 @@ const Home: React.FC = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `https://api.pokemontcg.io/v2/cards?page=${page}&pageSize=6`
+          `https://api.pokemontcg.io/v2/cards?page=${page}&pageSize=8`
         );
         setCards((prevCards) => [...prevCards, ...response.data.data]);
       } catch (error) {
