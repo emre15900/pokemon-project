@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+import { toast } from "react-toastify";
+
 const CardDetail: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -42,6 +44,7 @@ const CardDetail: React.FC = () => {
     const updatedSavedCards = [...savedCards, card];
     setSavedCards(updatedSavedCards);
     localStorage.setItem("savedCards", JSON.stringify(updatedSavedCards));
+    toast.success("Card saved!");
   };
 
   const removeCard = () => {
@@ -50,6 +53,7 @@ const CardDetail: React.FC = () => {
     );
     setSavedCards(updatedSavedCards);
     localStorage.setItem("savedCards", JSON.stringify(updatedSavedCards));
+    toast.error("Card removed!");
   };
 
   const isCardSaved = () => {
@@ -66,9 +70,17 @@ const CardDetail: React.FC = () => {
           alignItems: "center",
           justifyContent: "center",
           flexDirection: "column",
-          mt: 5,
+          mt: 1,
         }}
       >
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ color: "#ffffff", mt: 2, mb: 2, fontWeight: 600 }}
+        >
+          Pokémon Card Details
+        </Typography>
         <Card
           sx={{
             display: "flex",
@@ -123,6 +135,24 @@ const CardDetail: React.FC = () => {
           }}
         >
           {isCardSaved() ? "Remove Card" : "Save Card"}
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => router.push("/")}
+          sx={{
+            marginTop: 1,
+            borderRadius: "10px",
+            fontWeight: 600,
+            padding: "7px 2.8rem",
+            mb: 5,
+            borderColor: "#ffffff",
+            color: "#ffffff",
+            maxWidth: 390,
+            width: "100%",
+          }}
+        >
+          Back to Home
         </Button>
       </Grid>
     </Container>

@@ -118,7 +118,27 @@ const SavedCards: React.FC = () => {
           ))}
         </Grid>
       ) : (
-        <Typography variant="body1">No saved cards</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 2,
+            textAlign: "center",
+            mt: 10,
+          }}
+        >
+          <img
+            src="/images/empy.jpg"
+            width={300}
+            alt="empty"
+            style={{ borderRadius: "50%" }}
+          />
+          <Typography variant="h6" sx={{ color: "#ffffff" }}>
+            No saved cards!
+          </Typography>
+        </Box>
       )}
       <Grid
         sx={{

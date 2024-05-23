@@ -93,7 +93,10 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static" sx={{ background: "#2D3748" }}>
+      <AppBar
+        position="sticky"
+        sx={{ background: "#2D3748", padding: "5px 0" }}
+      >
         <Toolbar>
           <img
             src="/images/logo.png"
