@@ -7,6 +7,7 @@ import {
   CardMedia,
   CardContent,
   Button,
+  Grid,
 } from "@mui/material";
 import axios from "axios";
 
@@ -59,45 +60,71 @@ const CardDetail: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Card
+      <Grid
         sx={{
           display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           flexDirection: "column",
-          borderRadius: "10px",
-          padding: "10px",
-          background: "#2D3748",
-          "&:hover": {
-            cursor: "pointer",
-            boxShadow: "0 0 3px #10f110",
-            transition: "all 0.3s",
-            background: "#454f60",
-          },
+          mt: 5,
         }}
       >
-        <CardMedia
-          component="img"
-          image={card.images.large}
-          alt={card.name}
-          sx={{ maxWidth: 370 }}
-        />
-        <CardContent>
-          <Typography variant="h4">{card.name}</Typography>
-          <Typography>Type: {card.types.join(", ")}</Typography>
-          <Typography>HP: {card.hp}</Typography>
-          <Typography>
-            Abilities:{" "}
-            {card?.abilities?.map((ability: any) => ability.name).join(", ")}
-          </Typography>
-        </CardContent>
-      </Card>
-      <Button
-        variant="contained"
-        color={isCardSaved() ? "secondary" : "primary"}
-        onClick={() => (isCardSaved() ? removeCard() : saveCard())}
-        sx={{ marginTop: 2 }}
-      >
-        {isCardSaved() ? "Remove Card" : "Save Card"}
-      </Button>
+        <Card
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "10px",
+            padding: "10px",
+            background: "#2D3748",
+            maxWidth: 390,
+            "&:hover": {
+              cursor: "pointer",
+              boxShadow: "0 0 3px #10f110",
+              transition: "all 0.3s",
+              background: "#454f60",
+            },
+          }}
+        >
+          <CardMedia
+            component="img"
+            image={card.images.large}
+            alt={card.name}
+            sx={{ maxWidth: 370 }}
+          />
+          <CardContent sx={{ padding: "0 !important", mt: 2, mb: 1 }}>
+            <Typography
+              variant="h4"
+              sx={{ color: "#ffffff", mb: 1, fontWeight: 600 }}
+            >
+              {card.name}
+            </Typography>
+            <Typography sx={{ color: "#ffffff", mb: 1, fontWeight: 500 }}>
+              <strong>Type:</strong> {card.types.join(", ")}
+            </Typography>
+            <Typography sx={{ color: "#ffffff", mb: 1, fontWeight: 500 }}>
+              <strong>HP:</strong> {card.hp}
+            </Typography>
+            <Typography sx={{ color: "#ffffff", mb: 1, fontWeight: 500 }}>
+              <strong>Abilities:</strong>{" "}
+              {card?.abilities?.map((ability: any) => ability.name).join(", ")}
+            </Typography>
+          </CardContent>
+        </Card>
+        <Button
+          variant="contained"
+          color={isCardSaved() ? "secondary" : "primary"}
+          onClick={() => (isCardSaved() ? removeCard() : saveCard())}
+          sx={{
+            marginTop: 1,
+            width: "100%",
+            borderRadius: "10px",
+            fontWeight: 600,
+            maxWidth: 390,
+          }}
+        >
+          {isCardSaved() ? "Remove Card" : "Save Card"}
+        </Button>
+      </Grid>
     </Container>
   );
 };
